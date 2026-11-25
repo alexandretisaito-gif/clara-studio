@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OAuth Callback — CLARA STUDIO</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0d0f14; color: #f3f4f6; margin: 0; padding: 48px 20px; line-height: 1.6; }
+    .card { max-width: 720px; margin: 0 auto; background: #161a23; border: 1px solid #262c3a; border-radius: 14px; padding: 32px; }
+    code { display: block; background: #0b0d12; padding: 12px; border-radius: 8px; word-break: break-all; margin: 12px 0; }
+    a.btn { display: inline-block; background: #ff4d79; color: #fff; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>TikTok Authorization Received</h1>
+    <p id="status">Checking authorization parameters...</p>
+    <code id="code-box" style="display:none;"></code>
+    <a id="local-link" class="btn" href="#" style="display:none;">Send to Local Control Center (localhost:8000)</a>
+  </main>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const err = params.get("error");
+    const status = document.getElementById("status");
+    const box = document.getElementById("code-box");
+    const btn = document.getElementById("local-link");
+    if (err) {
+      status.textContent = "Authorization error: " + err;
+    } else if (code) {
+      status.textContent = "Authorization code ready. Redirecting to local Control Center...";
+      box.style.display = "block";
+      box.textContent = window.location.href;
+      const target = "http://127.0.0.1:8000/api/tiktok/callback" + window.location.search;
+      btn.href = target;
+      btn.style.display = "inline-block";
+    } else {
+      status.textContent = "No authorization code found in URL.";
+    }
+  </script>
+</body>
+</html>
